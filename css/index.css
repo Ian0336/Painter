@@ -1,0 +1,237 @@
+#bgCanvas{
+  position: absolute;
+  background: linear-gradient(180deg, #ffffff,#d6d5d5, #868686);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -500;
+}
+#canvas {
+  background-color: rgb(255, 255, 255);
+    border: 3px solid rgb(218, 218, 218);
+    border-radius: 10px;
+    border-image: 
+    linear-gradient(
+       
+      rgb(247, 247, 246), 
+      rgb(39, 39, 39)
+    ) 1;
+  }
+  
+  
+#color-input {
+  display: none;
+}
+#color-label {
+  position: relative;
+  height: 30px;
+  width: 50px;
+  margin-bottom: 0px;
+} 
+#color-input:checked ~ #color-picker {
+  display: block;
+}
+#color-picker {
+  position: relative; 
+  background-color: white;
+  height: 170px;
+  width: 200px;
+  left: 10px;
+  top: 0px;
+  border: solid 1px #ccc;
+  border-radius: 0px 20px 20px 20px;
+  padding: 5px;
+  display:none;
+}
+#color-picker:hover {
+  cursor: crosshair;
+}
+#color-indicator {
+  width: 20px;
+  height: 10px;
+  background-color: rgb(114, 114, 114);
+  opacity: 0.85;
+  position: absolute;
+  top: 6px;
+  left: 167px;
+  transform: translate(-50%, -50%);
+}
+.textInput:focus{
+  outline: none;
+}
+
+/* tool_btn */
+#myNavbar{
+  background: linear-gradient(180deg,#9b9b9b,#c0c0c0, rgba(255, 255, 255, 0.219) );
+  border-radius: 0% 0% 50% 50%;
+}
+.tool_btn{
+  position: relative;
+  width: 40%;
+  opacity: 0.3;
+  top:0px;
+
+  transition: all  0.1s ease-out; /* vendorless fallback */
+  -o-transition: all  0.1s ease-out; /* opera */
+  -ms-transition: all  0.1s ease-out; /* IE 10 */
+  -moz-transition: all  0.1s ease-out; /* Firefox */
+  -webkit-transition: all  0.1s ease-out; /*safari and chrome */
+  
+}
+.tool_btn:hover{
+  width: 50%;
+  opacity: 1;
+  top:20px;
+  /* -webkit-animation: tool_btn_hover 0.5s ; 
+  animation: tool_btn_hover 0.5s ; */
+  
+}
+.active{
+  width: 50%;
+  opacity: 1;
+  top:20px;
+}
+
+/* Func */
+#myFunc{
+  position: fixed;
+  top:200px;
+  right: 0px;
+  background: linear-gradient(90deg, #ffffff,#868686);
+  border-radius:50% 0%  0%  50%;
+}
+.func_btn{
+  margin: 20px;
+  display: block;
+  width: 2vw;
+  right: 0px;
+  opacity: 0.6;
+  transform:rotate(0deg);
+  transition: all  0.15s linear; /* vendorless fallback */
+  -o-transition: all  0.15s linear; /* opera */
+  -ms-transition: all  0.15s linear; /* IE 10 */
+  -moz-transition: all  0.15s linear; /* Firefox */
+  -webkit-transition: all  0.15s linear; /*safari and chrome */
+}
+#undo:hover{
+  right: 100px;
+  opacity: 1;
+  top:-10px;
+  transform:rotate(-35deg);
+} 
+#redo:hover{
+  right: 100px;
+  opacity: 1;
+  top:-10px;
+  transform:rotate(35deg);
+}
+#refresh:hover{
+  right: 100px;
+  opacity: 1;
+  top:-10px;
+  transform:rotate(180deg);
+}
+#uploadImg:hover{
+  right: 100px;
+  opacity: 1;
+  top:-10px;
+  transform:translateY(-20%);
+}
+#download:hover{
+  right: 100px;
+  opacity: 1;
+  top:-10px;
+  transform:translateY(20%);
+}
+
+/* Setting */
+select, input{
+  border: 3px solid rgb(218, 218, 218);
+  margin-bottom: 10px;
+  background: linear-gradient(180deg, #ffffff,#cac9c9);
+  transition: all  0.2s linear; /* vendorless fallback */
+  -o-transition: all  0.2s linear; /* opera */
+  -ms-transition: all  0.2s linear; /* IE 10 */
+  -moz-transition: all  0.2s linear; /* Firefox */
+  -webkit-transition: all  0.2s linear; /*safari and chrome */
+}
+select:hover, input:hover{
+  border: 5px solid rgb(92, 92, 92);
+  
+  background: linear-gradient(180deg, #ffffff,#ffffff);
+}
+#funcBar{
+  transform: translateX(-100%);
+  position: fixed;
+  top:100px;
+  left: 0px;
+  border-radius: 0% 5% 20% 0%;
+  background: linear-gradient(270deg, #ffffff,#b3b2b2);
+  transition: all  0.5s linear; /* vendorless fallback */
+  -o-transition: all  0.5s linear; /* opera */
+  -ms-transition: all  0.5s linear; /* IE 10 */
+  -moz-transition: all  0.5s linear; /* Firefox */
+  -webkit-transition: all  0.5s linear; /*safari and chrome */
+ 
+}
+.settingItem{
+  display: block;
+  width: 20vw;
+
+}
+
+#brushSize-label {
+  position: relative;
+  height: 5px;
+  width: 5px;
+  top: 0px;
+  margin-bottom: 0px;
+  display: block;
+  border-radius:50%;
+} 
+#text-label {
+  position: relative;
+  font-size: 20px;
+  font-family: sans-serif;
+ 
+  margin-bottom: 0px;
+  display: block;
+ 
+} 
+#settingIcon{
+  position: absolute;
+  right: -30px;
+  top: 0px;
+  width: 30px;
+  opacity: 0.8;
+  transition: all  0.5s linear; /* vendorless fallback */
+  -o-transition: all  0.5s linear; /* opera */
+  -ms-transition: all  0.5s linear; /* IE 10 */
+  -moz-transition: all 0.5s linear; /* Firefox */
+  -webkit-transition: all  0.5s linear; /*safari and chrome */
+}
+#settingIcon:hover{
+  right: -40px;
+  width: 40px;
+  opacity: 1;
+  transform:rotate(180deg);
+}
+#sideMenu--active:checked+.mySetting {
+ 
+  transform: translateX(0);
+
+}
+#hollow{
+  display: none!important;
+}
+#brushSizeDisplay{
+  display: flex;
+}
+#sideMenu--active {
+  position: absolute;
+  opacity: 0;
+ 
+  z-index: -1;
+ 
+}
