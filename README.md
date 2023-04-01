@@ -60,11 +60,6 @@
 
 [我的網站](https://painter-2aeca.web.app/)
 
-### Others (Optional)
-
-如果使用 Google Chrome 的話體驗會比較好。
-Dall api 的部分，因為 dall 只給我免費 1000 張圖片，希望夠用。
-祝助教能成為電繪大師(很明顯我不是)。助教辛苦了><。
 
 <style>
 table th{
