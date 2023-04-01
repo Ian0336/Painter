@@ -215,6 +215,7 @@ function refresh() {
 }
 
 function upload(ev) {
+  ctx.globalCompositeOperation = "source-over";
   if (ev.target.files) {
     let file = ev.target.files[0];
     var reader = new FileReader();
@@ -339,15 +340,15 @@ hollow.addEventListener("click", setHollow);
 
 canvas.addEventListener("mouseover", () => {
   let cur = mode;
-
+  console.log("Fdfd");
   if (mode == "line") cur = "brush";
-  canvas.style.cursor = `url('../img/${cur}_cur.png') 0 100, none`;
+  canvas.style.cursor = `-webkit-image-set(url('./img/${cur}.cur') 1x) 0 100, auto`;
 
   if (
     !hollow.checked &&
     (cur == "triangle" || cur == "circle" || cur == "rectangle")
   )
-    canvas.style.cursor = `url('../img/${cur}_filled_cur.png') 0 100, none`;
+    canvas.style.cursor = `-webkit-image-set(url('./img/${cur}_filled.cur') 1x) 0 100, auto`;
 });
 
 canvas.addEventListener("mousedown", (e) => {
@@ -582,21 +583,28 @@ document.addEventListener("mousemove", (e) => {
   prev_mouse.y = mouse.y;
   mouse.x = e.x;
   mouse.y = e.y;
-  particlesArr.push(new Particle(true));
+  if (particlesArr.length < 160)
+    particlesArr.push(new Particle(true, bgCan, bgCtx));
 });
 
 class Particle {
-  constructor(isMouse) {
-    if (isMouse) {
-      this.x = mouse.x;
-      this.y = mouse.y;
+  constructor(isMouse, can, content, x = 0, y = 0) {
+    this.content = content;
+    if (x == 0) {
+      if (isMouse) {
+        this.x = mouse.x;
+        this.y = mouse.y;
+      } else {
+        this.x = Math.random() * can.width;
+        this.y = Math.random() * can.height;
+      }
     } else {
-      this.x = Math.random() * bgCan.width;
-      this.y = Math.random() * bgCan.height;
+      this.x = x;
+      this.y = y;
     }
 
     this.colorRange = Math.random() * 100 - 50;
-    if (Math.random() > 0.2) this.hollow = true;
+    if (Math.random() > 0.15) this.hollow = true;
     else this.hollow = false;
 
     /* this.x = Math.random() * bgCan.width;
@@ -621,23 +629,23 @@ class Particle {
     }
   }
   draw() {
-    bgCtx.fillStyle = `rgba(${rgbSet.r + this.colorRange},${
+    this.content.fillStyle = `rgba(${rgbSet.r + this.colorRange},${
       rgbSet.g + this.colorRange
     },
       ${rgbSet.b + this.colorRange},1)`;
-    bgCtx.strokeStyle = `rgba(${rgbSet.r + this.colorRange},${
+    this.content.strokeStyle = `rgba(${rgbSet.r + this.colorRange},${
       rgbSet.g + this.colorRange
     },
       ${rgbSet.b + this.colorRange},1)`;
-    bgCtx.beginPath();
-    bgCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    if (this.hollow) bgCtx.stroke();
-    else bgCtx.fill();
+    this.content.beginPath();
+    this.content.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    if (this.hollow) this.content.stroke();
+    else this.content.fill();
   }
 }
 function initParticle() {
   for (let i = 0; i < 150; i++) {
-    particlesArr.push(new Particle(false));
+    particlesArr.push(new Particle(false, bgCan, bgCtx));
   }
 }
 initParticle();
@@ -647,14 +655,140 @@ function handleParticle() {
     par.draw();
     if (par.size < 0.2) {
       particlesArr.splice(idx, 1);
-      if (particlesArr.length < 150) particlesArr.push(new Particle(false));
+      if (particlesArr.length < 150)
+        particlesArr.push(new Particle(false, bgCan, bgCtx));
     }
   });
 }
 
 function animate() {
   bgCtx.clearRect(0, 0, bgCan.width, bgCan.height);
-  handleParticle();
+  if (
+    document.getElementById("loadingCanvas").style.display === "" ||
+    document.getElementById("loadingCanvas").style.display === "none"
+  ) {
+    handleParticle();
+  }
   requestAnimationFrame(animate);
 }
 animate();
+
+/* dall api */
+class LoadingCoordinate {
+  constructor() {
+    this.circleCenterX = window.innerWidth / 2;
+    this.circleCenterY = window.innerHeight / 2;
+    this.radius = 200;
+    this.angle = 0;
+    this.angleStep = Math.PI / 150;
+    this.x = this.circleCenterX + this.radius * Math.cos(this.angle);
+    this.y = this.circleCenterY + this.radius * Math.sin(this.angle);
+  }
+  update() {
+    this.angle += this.angleStep;
+    this.x = this.circleCenterX + this.radius * Math.cos(this.angle);
+    this.y = this.circleCenterY + this.radius * Math.sin(this.angle);
+  }
+}
+
+async function getImage(url) {
+  document.getElementById("dallImg").src = url;
+  await new Promise((resolve, reject) => {
+    // 等待圖片加載完成
+    document.getElementById("dallImg").onload = resolve;
+    document.getElementById("dallImg").onerror = reject;
+  });
+}
+async function generateImages(prt) {
+  console.log("starting...");
+  document.getElementById("loadingCanvas").style.display = "block";
+  const url = "https://api.openai.com/v1/images/generations";
+  const apiKey = "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";
+
+  const prompt = prt;
+  const n = 1;
+  const size = "512x512";
+
+  const data = {
+    prompt: prompt,
+    n: n,
+    size: size,
+  };
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify(data),
+  }).catch((error) => console.error(error));
+
+  if (response == undefined) throw new Error("Something Wrong! ");
+  if (!response.ok) {
+    throw new Error("API Request failed with status " + response.status);
+  }
+  const json = await response.json();
+
+  console.log(json);
+  console.log(json.data[0].url);
+  // handle response data here
+  await getImage(json.data[0].url);
+  console.log("finish");
+  document.getElementById("loadingCanvas").style.display = "none";
+}
+
+document.getElementById("dallIcon").addEventListener("click", () => {
+  if (document.getElementById("dall--active").checked)
+    document.getElementById("dallImg").style.opacity = 0;
+  else document.getElementById("dallImg").style.opacity = 0.5;
+});
+function isEnglish(str) {
+  // 只包含英文字母、數字、空格和標點符號的正則表達式
+  var englishPattern = /^[a-zA-Z0-9\s\p{P}]+$/u;
+  return englishPattern.test(str);
+}
+document.getElementById("dallSend").addEventListener("click", () => {
+  document.getElementById("dallPrompt").style.border = "none";
+  let prompt = document.getElementById("dallPrompt").value;
+  if (isEnglish(prompt)) console.log(prompt);
+  else {
+    console.log("Fd");
+    document.getElementById("dallPrompt").style.border = "2px solid red";
+    return;
+  }
+  generateImages(prompt).catch((error) => console.log(error));
+});
+
+const ldCan = document.getElementById("loadingCanvas");
+const ldCtx = ldCan.getContext("2d");
+let circleCoor = new LoadingCoordinate();
+const loadinParticlesArr = [];
+ldCan.width = window.innerWidth;
+ldCan.height = window.innerHeight;
+
+window.addEventListener("resize", () => {
+  ldCan.width = window.innerWidth;
+  ldCan.height = window.innerHeight;
+});
+
+function handleLoading() {
+  circleCoor.update();
+  loadinParticlesArr.push(
+    new Particle(true, ldCan, ldCtx, circleCoor.x, circleCoor.y)
+  );
+  loadinParticlesArr.forEach((par, idx) => {
+    par.update();
+    par.draw();
+    if (par.size < 0.2) {
+      loadinParticlesArr.splice(idx, 1);
+    }
+  });
+}
+
+function loadingAnimate() {
+  ldCtx.clearRect(0, 0, ldCan.width, ldCan.height);
+  handleLoading();
+  requestAnimationFrame(loadingAnimate);
+}
+loadingAnimate();

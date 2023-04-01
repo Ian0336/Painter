@@ -2,12 +2,13 @@
 <html>
   <head>
     <title>Painter</title>
-   
+    <link rel="icon" href="./img/brush.cur" type="image/x-icon" />
     <link rel="stylesheet" type="text/css" href="./css/index.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   </head>
   <body>
     <canvas id="bgCanvas"></canvas>
+    <canvas id="loadingCanvas"></canvas>
     <nav class="navbar navbar-expand-lg navbar-light" id = "myNavbar">
       <div class="container mb-3">
         <div class="row align-items-center">
@@ -37,12 +38,12 @@
       <div class="mySetting d-flex align-items-center flex-column" id = "funcBar">
 
         <div id="brushSizeDisplay" class=" my-4 align-items-center flex-column" style="display: flex;">
-          <abbr title="brushSize"><label for="brushSize" id="brushSize-label" style="background-color: rgb(0, 0, 0)" class="mb-3"></label></abbr>
+          <abbr title="Brush size"><label for="brushSize" id="brushSize-label" style="background-color: rgb(0, 0, 0)" class="mb-3"></label></abbr>
           <input type="range" id="brushSize" min="1" max="15" value="2" class="settingItem"/>
         </div>
 
         <div id="textDisplay" class=" my-4 align-items-center flex-column" style="display: flex;">
-          <abbr title="font style"><label  id="text-label" >T</label></abbr>
+          <abbr title="Font style"><label  id="text-label" >T</label></abbr>
           <input type="number" id="fontSize" min="10" max="100" value="20" class="settingItem"/>
           <select id="fontFamily" class="settingItem">
             <option value="sans-serif">sans-serif</option>
@@ -55,13 +56,13 @@
         
         <div id="hollowDisplay" class=" my-4 align-items-center flex-column" style="display: flex;">
           <input type="checkbox" id="hollow" name="hollow" checked class="settingItem" >
-          <abbr title="filled or not"><label for="hollow" class="settingItem d-flex align-items-center flex-column" id="hollowLabel"><img src="./img/circle.png" id="hollowImg" style="width: 30px;height: 30px;"></label></abbr>
+          <abbr title="Filled or not"><label for="hollow" class="settingItem d-flex align-items-center flex-column" id="hollowLabel"><img src="./img/circle.png" id="hollowImg" style="width: 30px;height: 30px;"></label></abbr>
         </div>
      
         
         
         <div id="colorDisplay" class=" my-4">
-          <abbr title="color"><label for="color-input" id="color-label" style="background-color: rgb(0, 0, 0)"></label></abbr>
+          <abbr title="Color"><label for="color-input" id="color-label" style="background-color: rgb(0, 0, 0)"></label></abbr>
           <input type="checkbox" id="color-input" ></input>
           <div id="color-picker">
             
@@ -74,11 +75,24 @@
           <img  src="./img/setting.png" id="settingIcon">
         </label>
       </div>
+
+      <input type="checkbox" name="" id="dall--active">
+      <div class="dallBar d-flex align-items-center flex-column" id = "dallBar">
+        <label>Please input the prompt. (in English)</label>
+        <input type="text" id="dallPrompt">
+        <img src="./img/send.png" id="dallSend">
+        <label for="dall--active">
+          <img  src="./img/ai.png" id="dallIcon">
+        </label>
+      </div>
       
-   
-   
- 
-      <div class="d-flex justify-content-center mt-5"><canvas id="canvas" width="1000" height="500"></canvas></div>
+      
+      <div class="mt-5 d-flex align-items-center flex-column">
+        
+        <canvas id="canvas" width="1000" height="550"></canvas>
+        <img id="dallImg" src="./img/image.png">
+      </div>
+      
       
       
     </div>
